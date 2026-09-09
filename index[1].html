@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lamport Logical Clock Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Distributed Systems Visualizer</p>
+      <h1>Lamport Logical Clock Simulator</h1>
+      <p class="subtitle">Explore multiple distributed processes and see how logical clocks establish event ordering without synchronized physical clocks.</p>
+    </div>
+    <button id="resetBtn" class="secondary">Reset Simulation</button>
+  </header>
+
+  <main class="container">
+    <section class="card controls">
+      <div class="section-title">
+        <div>
+          <h2>Simulation Controls</h2>
+          <p>Create processes, execute local events, and send messages between processes.</p>
+        </div>
+        <div class="clock-rule">Rule: <strong>C = max(C, received) + 1</strong></div>
+      </div>
+
+      <div class="control-grid">
+        <label>
+          Process
+          <select id="processSelect"></select>
+        </label>
+        <button id="localBtn" class="primary">＋ Local Event</button>
+        <label>
+          Sender
+          <select id="senderSelect"></select>
+        </label>
+        <label>
+          Receiver
+          <select id="receiverSelect"></select>
+        </label>
+        <button id="sendBtn" class="primary">→ Send Message</button>
+      </div>
+
+      <div class="add-process">
+        <input id="processName" maxlength="12" placeholder="New process name, e.g. P4" />
+        <button id="addProcessBtn" class="secondary">Add Process</button>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat"><span>Processes</span><strong id="processCount">0</strong></div>
+      <div class="stat"><span>Events</span><strong id="eventCount">0</strong></div>
+      <div class="stat"><span>Messages</span><strong id="messageCount">0</strong></div>
+      <div class="stat"><span>Next event ID</span><strong id="nextId">1</strong></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Process Timeline</h2>
+          <p>Each process has its own logical clock. Message reception updates the receiver using Lamport's rule.</p>
+        </div>
+        <span class="live-dot">● Live</span>
+      </div>
+      <div id="processes" class="processes"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Global Event Ordering</h2>
+          <p>Events are sorted by Lamport timestamp. Ties are broken by process ID and event ID for a deterministic display.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Event</th><th>Process</th><th>Type</th><th>Timestamp</th><th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="eventTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="info-grid">
+      <article class="card">
+        <h2>Lamport Clock Rules</h2>
+        <ol>
+          <li>Before every local/send event, increment the process clock.</li>
+          <li>Attach the current clock value to the outgoing message.</li>
+          <li>When a message is received, set <code>C = max(C, messageTimestamp) + 1</code>.</li>
+          <li>If event A causally precedes B, then <code>L(A) &lt; L(B)</code>.</li>
+        </ol>
+      </article>
+      <article class="card">
+        <h2>Try This Demo</h2>
+        <p>1. Add a local event on P1.</p>
+        <p>2. Add a local event on P2.</p>
+        <p>3. Send a message from P1 → P2.</p>
+        <p>4. Compare the timestamps in the global event list.</p>
+        <p class="note">A Lamport clock gives a logical ordering; it does not measure real elapsed time.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>Lamport Logical Clock Simulator • Built with HTML, CSS and JavaScript</footer>
+  <script src="script.js"></script>
+</body>
+</html>
